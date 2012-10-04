@@ -1,0 +1,71 @@
+%%%------------------------------------------------------------------------
+%%% File: $Id: lama_console.erl 777 2007-04-10 19:53:38Z serge $
+%%%------------------------------------------------------------------------
+%%% @doc This module implements file logging functionality.
+%%% @author   Serge Aleynikov <saleyn@gmail.com>
+%%% @version  $Rev: 777 $
+%%%           $LastChangedDate: 2007-04-10 15:53:38 -0400 (Tue, 10 Apr 2007) $
+%%% @end
+%%%----------------------------------------------------------------------
+%%% $URL$
+%%% Created: 19-Mar-2007
+%%%----------------------------------------------------------------------
+-module(lama_file).
+-author('saleyn@gmail.com').
+-id("$Id$").
+
+%% External exports
+-export([init/1, log/2]).
+
+-record(logfile_state, {
+      logfile_types % List of priority types (see logger.hrl) that will be logged to file
+                    %  Default: lama:encode_mask[alert,error,warning,notice,info,log]
+    , logger        % pid of the lama_logger process
+}).
+
+%%---------------------------------------------------------------------
+%% @spec (Options) -> State::#console_state{}
+%% @doc Console logger initialization
+%% @end
+%%---------------------------------------------------------------------
+init(Options) ->
+    case lama:get_opt(use_logfile, Options) of
+    false ->
+        undefined;
+    true  ->
+        Types    = lama:get_opt(logfile_types, Options),
+        AppendDt = proplists:get_value(logfile_append_date, Options, true),
+        LogName  = lama:get_opt(logfile_name, Options),
+        {ok,Pid} = lama_logger:start_link(lama_logger, LogName, AppendDt),
+
+        #logfile_state{
+            logfile_types = lama:encode_mask(Types),
+            logger        = Pid
+        }
+    end.
+
+%%---------------------------------------------------------------------
+%% @spec (Report, State) -> {ok, State} | throw({error, Reason})
+%%          Report = {Pid, NowTime, Priority, Header, Msg::io_list()}
+%%          State  = #syslog_state{}
+%% @doc Initialize syslog event logger
+%% @end
+%%---------------------------------------------------------------------
+log(_Event, undefined) -> ok;
+log({_Pid,_Time,Priority,_Header,_Fmt,_Msg}=Rep, #logfile_state{logfile_types = LT} = State) ->
+    case lama:priority_to_int(Priority) band LT of
+    0 -> ok;
+    _ -> do_log(Rep, State)
+    end.
+
+terminate(_Reason, #logfile_state{logger=Pid} = State) ->
+    ok.
+
+%%%--------------------------------------------------------------------
+%%% Internal functions
+%%%--------------------------------------------------------------------
+
+do_log({_Pid, Time, Priority, Header, Msg}, #logfile_state{logger=Logger}) ->
+    lama_logger:log(Logger,
+        [string:left(atom_to_list(Priority), 8, $ ),
+         lama:timestamp(Time, log), Header, $ , Msg]).

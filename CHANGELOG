@@ -1,0 +1,67 @@
+Version 1.3
+===========
+    - Removed lama:to_lower/1, lama:to_upper/1 - they are now available in the string module.
+    - Moved syslog-related functionality from lama_syslog_h.erl to lama_syslog.erl.
+    - Renamed lama_syslog_h.erl to lama_log_h.erl
+    - Implemented a new functionality of defining callback modules for logging.  Currently
+      two callback modules are supported: lama_console, lama_syslog, lama_filelog.  A callback module
+      must export the following functions: init/1, log/2 and optionally terminate/2.
+    - Added lama_console.erl for console logging.
+    - Added new options:
+        one_liners   - list of callback modules that log events in "event per one line" mode
+                       (e.g. lama_syslog, lama_logmon)
+        multi_liners - list of callback modules that log events in "event per many lines" mode
+                       (e.g. lama_console, lama_filelog)
+        no_syslog    - inhibits syslog logging
+    - Converted values in lama_syslog.h #state.syslog_types, #state.ignore_types, #state.display_types
+      to bitmasks of integers ?LAMA_* defined in logger.hrl.  Now all checks are converted from
+      lists:member(Priority, AllowTypes) to (lama:opt_to_mask(Priority) band AllowTypes).
+    - Removed lama_syslog_h:log/3.  Now all logging must be handled though logger.hrl macros.
+    - Added lama_utils:seconds_since_epoch/1, lama_utils:seconds_since_epoch/2. 
+    - Added timestamp logging for DEBUG and INFO loglevels to screen
+    - Added new ?ALARM_SET/2 and ?ALARM_CLEAR/1 macros that log {App,Mod,Line} alarm location info.
+    - Modified alarm reports, they now look like this:
+
+      Standard lama:set_alarm/2, lama:clear_alarm/2:
+
+            =ALARM SET REPORT==== 17-Oct-2007::14:12:31 ===
+             test - Test1
+             
+            =ALARM CLEARED REPORT==== 17-Oct-2007::14:12:31 ===
+             test - Test1
+             
+      New ?ALARM_SET/2 and ?ALARM_CLEAR/1 macros:
+
+            =ALARM SET REPORT==== 17-Oct-2007::14:12:31 ===
+             (lama_log_h:603)
+             {disk_full,"/usr"} - Test2
+             
+            =ALARM CLEARED REPORT==== 17-Oct-2007::14:12:31 ===
+             (lama_log_h:604)
+             {disk_full,"/usr"} - Test2
+
+    Bug fixes:
+
+    - error_logger's warning_msg reports would get treated as info reports.
+    - errors in the emulator's shell caused by user executing functions no longer cause error logging.
+
+Version 1.1
+===========
+
+1. Added macros:
+   ?OAM_ALERT(ErrClass::atom(), ErrCode::integer(), Fmt, Args) -> ok.
+   ?OAM_ERROR(ErrClass::atom(), ErrCode::integer(), Fmt, Args) -> ok.
+
+   These macros assist with O&M classification of error codes.  Each
+   error can be tagged with ErrClass and ErrCode attributes that can
+   be used for proper error escalation based on Syslog reports.
+
+2. Added a feature in the ?DEBUG macro to specify the verbosity level.
+   If LAMA's 'debug_verbosity' environment option is set to 'silent' no
+   DEBUG reports will be printed to screen.  Possible verbosity values are:
+      silent, lowest, low, medium, high, highest
+
+
+Bug fixes:
+
+1. lama_guard's system_terminate handler now correctly calls exit(Reason).

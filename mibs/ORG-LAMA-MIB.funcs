@@ -1,0 +1,4 @@
+{lamaNodeName,                  {lama_mib, counter, [lamaNodeName]}}.
+{lamaDateTime,                  {lama_mib, counter, [lamaDateTime]}}.
+{lamaCurrentAlarmCount,         {lama_mib, counter, [lamaCurrentAlarmCount]}}.
+{lamaAlarmInformation,          {lama_mib, counter, [lamaAlarmInformation]}}.

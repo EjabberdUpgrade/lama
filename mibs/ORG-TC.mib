@@ -1,0 +1,32 @@
+ORG-TC DEFINITIONS ::= BEGIN
+  IMPORTS
+    TimeTicks,MODULE-IDENTITY, enterprises
+      FROM SNMPv2-SMI
+    TEXTUAL-CONVENTION
+      FROM SNMPv2-TC;
+
+  org MODULE-IDENTITY
+    LAST-UPDATED "9709250900Z"
+    ORGANIZATION "Generic"
+    CONTACT-INFO
+                 ""
+    DESCRIPTION
+                 "The MIB module for standard types"
+  ::= { enterprises 94627 }
+
+  applications   OBJECT IDENTIFIER ::= { org 10 }
+
+-- List of applications
+
+  otp            OBJECT IDENTIFIER ::= { applications 1  }
+  storm          OBJECT IDENTIFIER ::= { applications 10 }
+
+-- TEXTUAL CONENTIONs
+
+  ElapsedTime ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION "Timer that is incremented automatically until reset.
+                 Disabled = 0; Reset > 0"
+    SYNTAX      TimeTicks
+
+END
