@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Module lama_log_h</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" title="EDoc">
+</head>
+<body bgcolor="white">
+<div class="navbar"><a name="#navbar_top"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<hr>
+
+<h1>Module lama_log_h</h1>
+<ul class="index"><li><a href="#description">Description</a></li><li><a href="#index">Function Index</a></li><li><a href="#functions">Function Details</a></li></ul>This module implements an error_logger event handler that allows
+        to call other log handler callbacks for logging one-line reports
+        and multi-line reports.
+
+<p><b>Version:</b> $Rev: 777 $
+            $LastChangedDate: 2007-04-10 15:53:38 -0400 (Tue, 10 Apr 2007) $
+   ``
+   Example message as seen in the syslog file:
+   Mar 19 21:26:44 10.231.12.2 n@spider:test[0.45.0]: [ALERT] Test msg
+   '''</p>
+<p><b>Behaviours:</b> <a href="gen_event.html"><tt>gen_event</tt></a>.</p>
+<p><b>Authors:</b> Serge Aleynikov (<a href="mailto:saleyn@gmail.com"><tt>saleyn@gmail.com</tt></a>).</p>
+
+<h2><a name="description">Description</a></h2>This module implements an error_logger event handler that allows
+        to call other log handler callbacks for logging one-line reports
+        and multi-line reports.
+<h2><a name="index">Function Index</a></h2>
+<table width="100%" border="1" cellspacing="0" cellpadding="2" summary="function index"><tr><td valign="top"><a href="#add_logger-3">add_logger/3</a></td><td>Add a new logger module to LAMA.</td></tr>
+<tr><td valign="top"><a href="#delete_logger-2">delete_logger/2</a></td><td>Remore a log handler module from LAMA.</td></tr>
+<tr><td valign="top"><a href="#format_supervisor-1">format_supervisor/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#get_def_options-0">get_def_options/0</a></td><td>Gets default module's options.</td></tr>
+<tr><td valign="top"><a href="#handle_call-2">handle_call/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#handle_event-2">handle_event/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#handle_info-2">handle_info/2</a></td><td></td></tr>
+<tr><td valign="top"><a href="#init-1">init/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#one_line-1">one_line/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#start_link-1">start_link/1</a></td><td></td></tr>
+<tr><td valign="top"><a href="#test-0">test/0</a></td><td></td></tr>
+<tr><td valign="top"><a href="#test1-0">test1/0</a></td><td></td></tr>
+<tr><td valign="top"><a href="#test2-0">test2/0</a></td><td></td></tr>
+</table>
+
+<h2><a name="functions">Function Details</a></h2>
+
+<h3 class="function"><a name="add_logger-3">add_logger/3</a></h3>
+<div class="spec">
+<p><tt>add_logger(Type, Module::atom(), Options) -&gt; ok | {error, Reason}</tt>
+<ul class="definitions"><li><tt>Type = one | multi</tt></li><li><tt>Options = [{Opt::atom(), Value}]</tt></li></ul></p>
+</div><p>Add a new logger module to LAMA.  The module must export two
+       functions: <code>init/1</code>, <code>log/2</code> and optionally <code>terminate/2</code>.
+       <code>Type</code> determines if <code>Module</code> is a <code>one</code>-line logger or
+       <code>multi</code>-line logger.</p>
+
+<h3 class="function"><a name="delete_logger-2">delete_logger/2</a></h3>
+<div class="spec">
+<p><tt>delete_logger(Type, Module::atom()) -&gt; ok</tt>
+<ul class="definitions"><li><tt>Type = one | multi</tt></li></ul></p>
+</div><p>Remore a log handler module from LAMA.</p>
+
+<h3 class="function"><a name="format_supervisor-1">format_supervisor/1</a></h3>
+<div class="spec">
+<p><tt>format_supervisor(Rep) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="get_def_options-0">get_def_options/0</a></h3>
+<div class="spec">
+<p><tt>get_def_options() -&gt; TypedOptions::<a href="#type-typed_options">typed_options()</a></tt>
+<ul class="definitions"><li><tt><a name="type-typed_options">typed_options()</a> = <a href="lama.html#type-typed_options">lama:typed_options()</a></tt></li></ul></p>
+</div><p>Gets default module's options.</p>
+
+<h3 class="function"><a name="handle_call-2">handle_call/2</a></h3>
+<div class="spec">
+<p><tt>handle_call(Request, State) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="handle_event-2">handle_event/2</a></h3>
+<div class="spec">
+<p><tt>handle_event(Msg, State) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="handle_info-2">handle_info/2</a></h3>
+<div class="spec">
+<p><tt>handle_info(Info, State) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="init-1">init/1</a></h3>
+<div class="spec">
+<p><tt>init(Options) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="one_line-1">one_line/1</a></h3>
+<div class="spec">
+<p><tt>one_line(Rest) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="start_link-1">start_link/1</a></h3>
+<div class="spec">
+<p><tt>start_link(Options) -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="test-0">test/0</a></h3>
+<div class="spec">
+<p><tt>test() -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="test1-0">test1/0</a></h3>
+<div class="spec">
+<p><tt>test1() -&gt; any()</tt></p>
+</div>
+
+<h3 class="function"><a name="test2-0">test2/0</a></h3>
+<div class="spec">
+<p><tt>test2() -&gt; any()</tt></p>
+</div>
+<hr>
+
+<div class="navbar"><a name="#navbar_bottom"></a><table width="100%" border="0" cellspacing="0" cellpadding="2" summary="navigation bar"><tr><td><a href="overview-summary.html" target="overviewFrame">Overview</a></td><td><a href="http://www.erlang.org/"><img src="erlang.png" align="right" border="0" alt="erlang logo"></a></td></tr></table></div>
+<p><i>Generated by EDoc, Oct 4 2012, 15:58:33.</i></p>
+</body>
+</html>
