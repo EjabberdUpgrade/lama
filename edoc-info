@@ -1,4 +1,0 @@
-{application,lama}.
-{packages,[]}.
-{modules,[lama,lama_alarm_h,lama_app,lama_console,lama_guard,lama_log_h,
-          lama_logger,lama_mib,lama_syslog,lama_utils,tracer]}.
